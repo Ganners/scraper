@@ -18,8 +18,8 @@ const (
 
 	// The definition file for which to apply. This particular one works for
 	// the following URL:
-	ListDefinition    = "sainsburys-list.definition"
-	ProductDefinition = "sainsburys-product.definition"
+	ListDefinition    = "definitions/sainsburys-list.definition"
+	ProductDefinition = "definitions/sainsburys-product.definition"
 )
 
 var (

@@ -11,7 +11,7 @@ func TestParseDefinition(t *testing.T) {
 	for _, test := range []struct {
 		definition string
 		content    string
-		expected   []map[string]string
+		expected   []map[string]interface{}
 	}{
 		{
 			definition: strings.Join([]string{
@@ -23,7 +23,7 @@ func TestParseDefinition(t *testing.T) {
 				`<a href="SomeLink2">SomeLinkText2</a>`,
 				`This should be skipped`,
 			}, "\n"),
-			expected: []map[string]string{
+			expected: []map[string]interface{}{
 				{
 					"someLink":     "SomeLink1",
 					"someLinkText": "SomeLinkText1",
@@ -44,7 +44,7 @@ func TestParseDefinition(t *testing.T) {
 				`<a href="SomeLink2">SomeLinkText2</a>`,
 				`This should be skipped`,
 			}, "\n"),
-			expected: []map[string]string{
+			expected: []map[string]interface{}{
 				{
 					"someLink":     "somelink1",
 					"someLinkText": "SOMELINKTEXT1",
