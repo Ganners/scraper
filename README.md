@@ -1,8 +1,12 @@
-Scraper
-=======
+Scraper - Sainsburys Code Test
+==============================
 
 Usage
 -----
+
+Test:
+
+> go test ./...
 
 Install:
 
@@ -10,16 +14,18 @@ Install:
 
 Launch:
 
-> Scraper
+> scraper
 
-When prompted for a URL, try some of these:
+When prompted for a URL, try this:
 
-> http://www.sainsburys.co.uk/shop/gb/groceries/fruit-veg/ripe---ready
-> http://www.sainsburys.co.uk/shop/gb/groceries/fruit-veg/melon-pineapple-kiwi
+> http://hiring-tests.s3-website-eu-west-1.amazonaws.com/2015_Developer_Scrape/5_products.html
 
 If you want to use phantomjs then install phantomjs into
 `/usr/local/bin/phantomjs` (or modify the path in the code). Could
 configure to use flags later but it's not in use at the moment.
+
+It also has a definition file in the commit history which will fetch from the
+live Sainsburys website, it is as simple as modifying that file in any case.
 
 About
 -----
@@ -47,10 +53,10 @@ remove URL encoding, strip whitespace, uppercase and lowercase.
 Sainsburys.definition
 ---------------------
 
-The `sainsburys.definition` or `sainsburys-cache.definition` file does just
-this, it is was copied from the actual source (and tidied) so anything I wanted
-to extract I just put into a variable name. This is something anyone could do,
-you wouldn't need to be technically minded at all.
+The `sainsburys.definition` file does just this, it is was copied from the
+actual source (and tidied) so anything I wanted to extract I just put into a
+variable name. This is something anyone could do, you wouldn't need to be
+technically minded at all.
 
 This gets functionally lexed, and then goes through a very simple parser which
 will apply the lexicons to work out what should happen at certain variables.
@@ -63,11 +69,16 @@ channel in goroutines (which are workers) and so on. We spawn many workers for
 particular tasks and make sure that they can operate with thread safety. The
 result is a lock-free, race-free (and leak-free) program.
 
-The scraping of data which is populated via JavaScript lead me down a few
-routes, and I've left those implementers of the `WebReader` in. One example
-attempt was to use PhantomJS but it didn't give the desired response though I'm
-sure it could with a new or different package.
+I believe everything specific to the Sainsburys implementation is in
+the main.go and definitions files. The main source of complexity is in
+the `sainsburysFormatter` function.
 
-In the end I settled on grabbing the cached index from Google and using that
-instead.  Probably not a good long-term solution and it would fail if we wanted
-to scrape in realtime (we'd have to wait for Google's index to update).
+The `sainsburysFormatter` takes the parsed file and will generate it's
+own pipeline to fetch product pages (reusing existing functions to
+generate workers). It will also calculate the totals from all of the
+product fields.
+
+Given more time, I might modify the definition files to add the
+complexity so that it knows certain fields should be totalled, and that
+it should use a particular URL to merge in content from a child
+definition.

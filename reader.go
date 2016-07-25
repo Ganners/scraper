@@ -44,6 +44,7 @@ func reader(
 				// If 'q' is typed, quit
 				if text == "q" {
 					close(quit)
+					return
 				}
 
 				out <- text
