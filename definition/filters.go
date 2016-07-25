@@ -1,29 +1,22 @@
 package definition
 
 import (
+	"html"
 	"log"
 	"math"
-	"net/url"
-	"strconv"
 	"strings"
 )
 
 // Map a name to a function which matches the filterFunc definition
 var filters = map[string]filterFunc{
 	// Trims whitespace
-	"trim": strings.TrimSpace,
+	"trim": func(str string) interface{} { return strings.TrimSpace(str) },
 
-	// Unescapes a URL
-	"unescape": func(str string) string {
-		str, err := url.QueryUnescape(str)
-		if err != nil {
-			return "UNESCAPE_ERROR"
-		}
-		return str
-	},
+	// Unescapes a HTML string
+	"unescape": func(str string) interface{} { return html.UnescapeString(str) },
 
 	// Adds space before capitals
-	"respace": func(str string) string {
+	"respace": func(str string) interface{} {
 		i := 1
 		for {
 			log.Println(str)
@@ -46,19 +39,18 @@ var filters = map[string]filterFunc{
 		return str
 	},
 
-	"lowercase": strings.ToLower,
-	"uppercase": strings.ToUpper,
+	"lowercase": func(str string) interface{} { return strings.ToLower(str) },
+	"uppercase": func(str string) interface{} { return strings.ToUpper(str) },
 
-	"pence": func(str string) string {
+	"pence": func(str string) interface{} {
 		pennies := 0
 		unit := 0.0
 		for i := len(str) - 1; i >= 0; i-- {
 			if str[i] >= '0' && str[i] <= '9' {
-				log.Println(string(str[i]), int(str[i]-'0')*int(math.Pow(10, unit)))
 				pennies += int(str[i]-'0') * int(math.Pow(10, unit))
 				unit++
 			}
 		}
-		return strconv.Itoa(pennies)
+		return pennies
 	},
 }

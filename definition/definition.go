@@ -10,11 +10,11 @@ import (
 // Definition will be able to parse a byte slice and return information that we
 // want to extract from it
 type Definition interface {
-	Parse(content string) []map[string]string
+	Parse(content string) []map[string]interface{}
 }
 
 // A filterFunc is a function which can be used to modify a string
-type filterFunc func(string) string
+type filterFunc func(string) interface{}
 
 // DefinitionParser will contain the bytes from a definition file
 type DefinitionParser struct {
@@ -47,9 +47,9 @@ func NewDefinition(definitionFile string) (*DefinitionParser, error) {
 // be repeated, hence the slice
 //
 // This localises all variables and so is thread safe
-func (def *DefinitionParser) Parse(content string) []map[string]string {
+func (def *DefinitionParser) Parse(content string) []map[string]interface{} {
 
-	data := make([]map[string]string, 0, 10)
+	data := make([]map[string]interface{}, 0, 10)
 
 	// Nothing to do
 	if len(def.L.ast) == 0 {
@@ -58,7 +58,7 @@ func (def *DefinitionParser) Parse(content string) []map[string]string {
 
 	pos := 0
 	tokenIndex := 0
-	fields := make(map[string]string, 10)
+	fields := make(map[string]interface{}, 10)
 
 	variableStart := 0
 	variableName := ""
@@ -77,7 +77,7 @@ func (def *DefinitionParser) Parse(content string) []map[string]string {
 			// EOF means we want to retry applying our definition to
 			// newly seen text to see if we can get multiple
 			data = append(data, fields)
-			fields = make(map[string]string, 10)
+			fields = make(map[string]interface{}, 10)
 			tokenIndex = 0
 			pos -= 1
 			continue
@@ -119,7 +119,7 @@ func (def *DefinitionParser) Parse(content string) []map[string]string {
 					for _, filter := range filtersToApply {
 						filterFunc, found := def.filters[filter]
 						if found {
-							fields[variableName] = filterFunc(fields[variableName])
+							fields[variableName] = filterFunc(fields[variableName].(string))
 						}
 					}
 
