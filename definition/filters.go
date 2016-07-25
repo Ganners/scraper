@@ -2,7 +2,9 @@ package definition
 
 import (
 	"log"
+	"math"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -46,4 +48,17 @@ var filters = map[string]filterFunc{
 
 	"lowercase": strings.ToLower,
 	"uppercase": strings.ToUpper,
+
+	"pence": func(str string) string {
+		pennies := 0
+		unit := 0.0
+		for i := len(str) - 1; i >= 0; i-- {
+			if str[i] >= '0' && str[i] <= '9' {
+				log.Println(string(str[i]), int(str[i]-'0')*int(math.Pow(10, unit)))
+				pennies += int(str[i]-'0') * int(math.Pow(10, unit))
+				unit++
+			}
+		}
+		return strconv.Itoa(pennies)
+	},
 }

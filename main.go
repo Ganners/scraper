@@ -5,6 +5,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -189,16 +190,22 @@ func presenter(
 					// Present it! Using a string is convenient so would lead
 					// to lots of allocations due to the immutibility of
 					// strings. Better to use a byte slice
-					str := ""
-					for _, row := range fields {
-						for fieldName, value := range row {
-							str += fieldName + ": " + value + "\n"
-						}
-						str += "\n"
+					presentation := &struct {
+						Products     []map[string]string
+						TotalUnit    int
+						TotalMeasure int
+					}{
+						Products: fields,
+						Total:    0,
+					}
+
+					b, err := json.Marshal(presentation)
+					if err != nil {
+						errors <- fmt.Errorf("unable to marshal presentation into json: %s", err)
 					}
 
 					// Just print it out
-					out <- str
+					out <- string(b)
 				}
 			}
 		}()

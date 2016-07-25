@@ -11,14 +11,14 @@
     </div>
     {{_}}
     <p class="pricePerUnit">
-        {{pricePerUnit}}
+        {{pricePerUnit|pence}}
         <abbr title="per">/</abbr>
         <abbr title="unit">
             <span class="pricePerUnitUnit">unit</span>
         </abbr>
     </p>
     <p class="pricePerMeasure">
-        {{pricePerMeasure}}
+        {{pricePerMeasure|pence}}
         <abbr title="per">/</abbr>
         <abbr title="each">
             <span class="pricePerMeasureMeasure">ea</span>
